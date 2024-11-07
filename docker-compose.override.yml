@@ -1,0 +1,60 @@
+version: "2.6"
+
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+  elasticsearch:
+    container_name: elasticsearch
+    environment:
+      - xpack.monitoring.enabled=true
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+  kibana:
+    container_name: kibana
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_URL=http://localhost:9200
+    networks:
+      - elastic
+  administration.api:
+    container_name: administration.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DatabaseSettings:User ID=postgres;Password=123;Server=smartfindpostgresqlserver.postgres.database.azure.com;Port=5432;Database=SmartfindAdministrationDb;Integrated Security=true;Pooling=true
+    ports:
+     - "7020:80"
+  services.category.api:
+    container_name: services.category.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DatabaseSettings:User ID=postgres;Password=Smartfind%2022!;Server=smartfindpostgresqlserver.postgres.database.azure.com;Port=5432;Database=SmartfindAdministrationDb;Integrated Security=true;Pooling=true
+    ports:
+     - "7245:80"
+  services.notification.api:
+    container_name: services.notification.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DatabaseSettings:User ID=postgres;Password=Smartfind%2022!;Server=smartfindpostgresqlserver.postgres.database.azure.com;Port=5432;Database=SharedTenantDb;Integrated Security=true;Pooling=true
+    ports:
+     - "7168:80"
+  services.product.api:
+    container_name: services.product.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DatabaseSettings:User ID=postgres;Password=Smartfind%2022!;Server=smartfindpostgresqlserver.postgres.database.azure.com;Port=5432;Database=SharedTenantDb;Integrated Security=true;Pooling=true
+    ports:
+     - "7168:80"
+  

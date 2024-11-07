@@ -1,0 +1,36 @@
+version: "2.6"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.8
+  administration.api:
+    image: 905418374099.dkr.ecr.eu-central-1.amazonaws.com/administration-api
+    build:
+      context: .
+      dockerfile: Presentation/Obase.AwsWorkshop.Administration.Api/Dockerfile
+  services.category.api:
+    image: 905418374099.dkr.ecr.eu-central-1.amazonaws.com/category-api
+    build:
+      context: .
+      dockerfile: Services/Obase.AwsWorkshop.Category.Api/Dockerfile
+  services.notification.api:
+    image: 905418374099.dkr.ecr.eu-central-1.amazonaws.com/notification-api
+    build:
+      context: .
+      dockerfile: Services/Obase.AwsWorkshop.Notification.Api/Dockerfile
+  services.product.api:
+    image: 905418374099.dkr.ecr.eu-central-1.amazonaws.com/product-api
+    build:
+      context: .
+      dockerfile: Services/Obase.AwsWorkshop.Product.Api/Dockerfile
+networks:
+  elastic:
+    driver: bridge
+
+volumes:
+  elasticsearch-data:
+  
