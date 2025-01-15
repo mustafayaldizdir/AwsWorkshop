@@ -1,1 +1,1 @@
-# Obase.AwsWorkshop
+# AwsWorkshop
